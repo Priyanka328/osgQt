@@ -1,6 +1,10 @@
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_LD_FLAGS "${CMAKE_CXX_FLAGS} -libc++")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=libc++")
+
 IF(WIN32)
     CMAKE_MINIMUM_REQUIRED(VERSION 2.4.6 FATAL_ERROR)
 ELSE(WIN32)
@@ -11,43 +15,43 @@ ELSE(WIN32)
     ENDIF(APPLE)
 ENDIF(WIN32)
 
-if(COMMAND cmake_policy)
-    # Works around warnings libraries linked against that don't
-    # have absolute paths (e.g. -lpthreads)
-    cmake_policy(SET CMP0003 NEW)
+# if(COMMAND cmake_policy)
+#     # Works around warnings libraries linked against that don't
+#     # have absolute paths (e.g. -lpthreads)
+#     cmake_policy(SET CMP0003 NEW)
 
-    # Works around warnings about escaped quotes in ADD_DEFINITIONS
-    # statements.
-    cmake_policy(SET CMP0005 NEW)
+#     # Works around warnings about escaped quotes in ADD_DEFINITIONS
+#     # statements.
+#     cmake_policy(SET CMP0005 NEW)
 
-    # tell CMake to prefer CMake's own CMake modules when available
-    # only available from cmake-2.8.4
-    if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 8) OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 8 AND ${CMAKE_PATCH_VERSION} GREATER 3))
-        cmake_policy(SET CMP0017 NEW)
-    endif()
+#     # tell CMake to prefer CMake's own CMake modules when available
+#     # only available from cmake-2.8.4
+#     if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 8) OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 8 AND ${CMAKE_PATCH_VERSION} GREATER 3))
+#         cmake_policy(SET CMP0017 NEW)
+#     endif()
 
-    # cmake-2.6.1 introduces policy cmp0008 decide how to treat full path libraries that do not appear to be valid library file names
-    # quote from cvslog "Such libraries worked by accident in the VS IDE and Xcode generators in CMake 2.4 and below."
-    if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 6) OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 6 AND ${CMAKE_PATCH_VERSION} GREATER 0))
-        cmake_policy(SET CMP0008 OLD)
-    endif()
+#     # cmake-2.6.1 introduces policy cmp0008 decide how to treat full path libraries that do not appear to be valid library file names
+#     # quote from cvslog "Such libraries worked by accident in the VS IDE and Xcode generators in CMake 2.4 and below."
+#     if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 6) OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 6 AND ${CMAKE_PATCH_VERSION} GREATER 0))
+#         cmake_policy(SET CMP0008 OLD)
+#     endif()
 
-    # disable autolinking to qtmain as we have our own main() functions (new in Qt 5.1)
-    if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 8) OR
-        (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 8 AND ${CMAKE_PATCH_VERSION} GREATER 10))
-        cmake_policy(SET CMP0020 OLD)
-    endif()
-    # nicer version check - but needs at least CMake 2.6.2? Worth upgrading the requirements?
-    #if("${CMAKE_VERSION}" VERSION_GREATER 2.8.10)
-    # or even easier (available in cmake-2.6)
-    #if(POLICY CMPxyzw)
+#     # disable autolinking to qtmain as we have our own main() functions (new in Qt 5.1)
+#     if(${CMAKE_MAJOR_VERSION} GREATER 2 OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 8) OR
+#         (${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} EQUAL 8 AND ${CMAKE_PATCH_VERSION} GREATER 10))
+#         cmake_policy(SET CMP0020 OLD)
+#     endif()
+#     # nicer version check - but needs at least CMake 2.6.2? Worth upgrading the requirements?
+#     #if("${CMAKE_VERSION}" VERSION_GREATER 2.8.10)
+#     # or even easier (available in cmake-2.6)
+#     #if(POLICY CMPxyzw)
 
-endif()
+# endif()
 
 IF(APPLE)
   # Get OSX version in MAJOR.MINOR format
@@ -103,25 +107,25 @@ IF(APPLE)
     # and 32/64-bit Intel/PPC on >= 10.5. Anything <= 10.3 doesn't support.
     # These are set the first time CMake is run, and can be changed by
     # the user at any time.
-    IF(OSG_OSX_VERSION VERSION_GREATER 10.7)
-      # 64 Bit Works, i386,ppc is not supported any more
-      SET(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX")
-      SET(CMAKE_OSX_DEPLOYMENT_TARGET "10.8" CACHE STRING "Target OSX version")
-    ELSEIF(OSG_OSX_VERSION VERSION_EQUAL 10.7)
-      # 64 Bit Works, PPC is not supported any more
-      SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX")
-    ELSEIF(OSG_OSX_VERSION VERSION_GREATER 10.4)
-      # 64-bit compiles are not supported with Carbon.
-      SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX")
-      SET(CMAKE_OSX_DEPLOYMENT_TARGET "10.5" CACHE STRING "Target OSX version")
-    ELSEIF(OSG_OSX_VERSION VERSION_EQUAL 10.4)
-      # 64-bit compiles are not supported with Carbon.
-      SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX")
-    ELSE()
-      # No Universal Binary support and SDK detection is too unreliable.
-      # Warn user and continue at their own peril.
-      MESSAGE(WARNING "OSX 10.3 and earlier not supported.")
-    ENDIF()
+    # IF(OSG_OSX_VERSION VERSION_GREATER 10.7)
+    #   # 64 Bit Works, i386,ppc is not supported any more
+    #   SET(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Build architectures for OSX")
+    #   SET(CMAKE_OSX_DEPLOYMENT_TARGET "10.8" CACHE STRING "Target OSX version")
+    # ELSEIF(OSG_OSX_VERSION VERSION_EQUAL 10.7)
+    #   # 64 Bit Works, PPC is not supported any more
+    #   SET(CMAKE_OSX_ARCHITECTURES "i386;x86_64" CACHE STRING "Build architectures for OSX")
+    # ELSEIF(OSG_OSX_VERSION VERSION_GREATER 10.4)
+    #   # 64-bit compiles are not supported with Carbon.
+    #   SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX")
+    #   SET(CMAKE_OSX_DEPLOYMENT_TARGET "10.5" CACHE STRING "Target OSX version")
+    # ELSEIF(OSG_OSX_VERSION VERSION_EQUAL 10.4)
+    #   # 64-bit compiles are not supported with Carbon.
+    #   SET(CMAKE_OSX_ARCHITECTURES "ppc;i386" CACHE STRING "Build architectures for OSX")
+    # ELSE()
+    #   # No Universal Binary support and SDK detection is too unreliable.
+    #   # Warn user and continue at their own peril.
+    #   MESSAGE(WARNING "OSX 10.3 and earlier not supported.")
+    # ENDIF()
   ENDIF()
 ENDIF()
 
