@@ -1,0 +1,11 @@
+<package>
+    <description brief="osgQt">
+      The library is a fork of the osgQt project since it requires
+      temporary patches as long as Qt4 have to be supported by the
+      MARS simulation software.
+   </description>
+   <maintainer>Malte Langosz/malte.langosz@dfki.de</maintainer>
+   <depend package="osg" optional="1" />
+   <depend package="qt4" optional="1" />
+    <tags>needs_opt</tags>
+</package>
