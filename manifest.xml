@@ -7,5 +7,5 @@
    <maintainer>Malte Langosz/malte.langosz@dfki.de</maintainer>
    <depend package="osg" optional="1" />
    <depend package="qt4" optional="1" />
-    <tags>needs_opt</tags>
+    <tags>stable</tags>
 </package>
