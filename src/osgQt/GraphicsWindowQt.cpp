@@ -91,6 +91,11 @@ public:
         //mKeyMap[84                    ] = osgGA::GUIEventAdapter::KEY_KP_Down;
         //mKeyMap[85                    ] = osgGA::GUIEventAdapter::KEY_KP_Page_Down;
         mKeyMap[Qt::Key_Insert        ] = osgGA::GUIEventAdapter::KEY_KP_Insert;
+#ifdef __APPLE__
+        mKeyMap[68                    ] = 100-97+1;
+        mKeyMap[67                    ] = 99-97+1;
+        mKeyMap[86                    ] = 118-97+1;
+#endif
         //mKeyMap[Qt::Key_Delete        ] = osgGA::GUIEventAdapter::KEY_KP_Delete;
     }
 
