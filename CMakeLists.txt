@@ -1,10 +1,6 @@
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-#set(CMAKE_LD_FLAGS "${CMAKE_CXX_FLAGS} -libc++")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=libc++")
-
 IF(WIN32)
     CMAKE_MINIMUM_REQUIRED(VERSION 2.4.6 FATAL_ERROR)
 ELSE(WIN32)
@@ -680,36 +676,6 @@ ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         # CMake lacks an elseif, so other non-gcc, non-VS compilers need
         # to be listed below. If unhandled, OSG_AGGRESSIVE_WARNING_FLAGS should
         # remain unset.
-
-        IF (APPLE)
-            SET(OSG_CXX_LANGUAGE_STANDARD "C++11" CACHE STRING "set the c++ language standard (C++98 / GNU++98 / C++11) for OSG" )
-            MARK_AS_ADVANCED(OSG_CXX_LANGUAGE_STANDARD)
-            # remove existing flags
-            REMOVE_CXX_FLAG(-std=c++98)
-            REMOVE_CXX_FLAG(-std=gnu++98)
-            REMOVE_CXX_FLAG(-std=c++11)
-            REMOVE_CXX_FLAG(-stdlib=libstdc++)
-            REMOVE_CXX_FLAG(-stdlib=libc++)
-
-            IF(${OSG_CXX_LANGUAGE_STANDARD} STREQUAL "c++98" OR ${OSG_CXX_LANGUAGE_STANDARD} STREQUAL "C++98")
-                set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++98")
-                set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libstdc++")
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98 -stdlib=libstdc++")
-            ELSE()
-                IF(${OSG_CXX_LANGUAGE_STANDARD} STREQUAL "gnu++98" OR ${OSG_CXX_LANGUAGE_STANDARD} STREQUAL "GNU++98")
-                    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "gnu++98")
-                    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libstdc++")
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++98 -stdlib=libstdc++")
-                ELSE()
-                    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
-                    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-                    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
-                ENDIF()
-            ENDIF()
-
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -Wno-conversion")
-            set(WARNING_CFLAGS "")
-        ENDIF()
 ENDIF()
 
 # This part is for the CMake menu option to toggle the warnings on/off.
