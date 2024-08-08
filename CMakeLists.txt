@@ -458,8 +458,6 @@ INCLUDE(OsgMacroUtils)
 
 IF($ENV{USE_QT5})
   SET(DESIRED_QT_VERSION 5)
-ELSE()
-  SET(DESIRED_QT_VERSION 4)
 ENDIF()
 
 IF  (DESIRED_QT_VERSION)
@@ -470,10 +468,13 @@ IF  (DESIRED_QT_VERSION)
     ENDIF()
 
 ELSE()
+    message("check for qt4")
+    FIND_PACKAGE(Qt4)
 
-    FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
+    IF ( NOT Qt4_FOUND )
+        message("check for qt5")
+        FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
 
-    IF ( Qt5Widgets_FOUND )
         # CMake 2.8.8 or greater required
         BUILDER_VERSION_GREATER(2 8 7)
         IF(NOT VALID_BUILDER_VERSION)
@@ -486,9 +487,6 @@ ELSE()
         ENDIF( )
     ENDIF( )
 
-    IF ( NOT Qt5Widgets_FOUND )
-        FIND_PACKAGE(Qt4 REQUIRED)
-    ENDIF()
 ENDIF()
 
 #If we have found Qt5, let's try to top off by getting the webkit as well
